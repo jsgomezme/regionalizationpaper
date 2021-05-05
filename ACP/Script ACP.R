@@ -1,0 +1,69 @@
+###### ECONOMETRIA II CLASE II ###################
+rm(list=ls())
+getwd()
+setwd("C:/Users/Santiago/Downloads/completa")
+getwd()
+rh <- read.csv2("base.csv", header=T, sep = ";")
+rh
+View(rh)
+datosrh=rh[,-c(1,2)]
+datosrh
+View(datosrh)
+data.frame(datosrh)
+names=names(datosrh)
+names
+estadisticas=summary(datosrh)
+estadisticas
+write.csv2(estadisticas,"ESTADISTICAS.csv")
+vcov=var(datosrh)
+View(vcov)
+write.csv2(vcov,"Var-Cov.csv") 
+cor=cor(datosrh)
+View(cor)
+write.csv2(cor,"CORRELACIONES.csv") 
+pairs(datosrh, main="Gráfico de dispersión de los datos")
+library(psych)
+cortest.bartlett(cor,nrow(datosrh))
+library(FactoMineR)
+data.frame(datosrh)
+ACP= PCA(datosrh, scale.unit = TRUE, ncp = 5,graph = FALSE, axes = c(1,2))
+ACP= PCA(datosrh, scale.unit = TRUE, ncp = 5,graph = TRUE, axes = c(1,3))
+ACP= PCA(datosrh, scale.unit = TRUE, ncp = 5,graph = TRUE, axes = c(2,3))
+names(ACP)
+ACP
+attach(ACP)
+var
+coor=var$coor
+write.csv2(coor,"Coor.csv")
+cargas=var$cor
+write.csv2(cargas,"Cargas.csv")
+Valprop=ACP$eig
+Valprop
+View(Valprop)
+write.csv2(Valprop,"Valprop.csv")
+variables=ACP$var
+variables
+View(variables)
+write.csv2(variables,"Variables.csv")
+round(variables$contrib,1)
+sum(variables$contrib[,1])
+sdv=ACP$svd
+write.csv2(sdv,"Sdv.csv")
+Vecprop=ACP$ind
+write.csv2(Vecprop,"Vecprop.csv")
+Var=ACP$svd
+Var
+compon=Var$V
+compon
+write.csv2(compon,"Componentes.csv")
+datosrh1=as.matrix(datosrh)
+datosrh1
+NuevasVar1=datosrh1%*%compon
+NuevasVar1
+View(NuevasVar1)
+rh[1]
+Municipio=as.matrix(rh[1])
+Municipio
+rownames(NuevasVar1)=Municipio
+View(NuevasVar1)
+write.csv2(NuevasVar1,"NuevasVar1.csv")
